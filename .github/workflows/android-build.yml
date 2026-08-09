@@ -29,7 +29,7 @@ jobs:
 
       - name: Muammoli UI kutubxonalarni yangilash
         run: |
-          npm install react-native-gesture-handler@latest react-native-screens@latest react-native-safe-area-context@latest react-native-reanimated@3.16.1 --legacy-peer-deps
+          npm install react-native-gesture-handler@latest react-native-screens@3.31.1 react-native-safe-area-context@latest react-native-reanimated@3.16.1 --legacy-peer-deps
 
       - name: Android SDK va AGP versiyalarini majburiy yangilash
         run: |
