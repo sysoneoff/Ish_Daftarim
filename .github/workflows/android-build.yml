@@ -31,9 +31,14 @@ jobs:
         run: |
           npm install react-native-gesture-handler@latest react-native-screens@latest react-native-safe-area-context@latest react-native-reanimated@latest --legacy-peer-deps
 
-      - name: AGP versiyasini tuzatish
+      - name: Android SDK va AGP versiyalarini majburiy yangilash
         run: |
-          sed -i 's/agp = "8.5.0"/agp = "8.7.2"/' node_modules/@react-native/gradle-plugin/gradle/libs.versions.toml
+          grep -rl 'compileSdkVersion = 34' android/ | xargs sed -i 's/compileSdkVersion = 34/compileSdkVersion = 35/g' || true
+          grep -rl 'targetSdkVersion = 34' android/ | xargs sed -i 's/targetSdkVersion = 34/targetSdkVersion = 35/g' || true
+          grep -rl 'compileSdk 34' android/ | xargs sed -i 's/compileSdk 34/compileSdk 35/g' || true
+          grep -rl 'targetSdk 34' android/ | xargs sed -i 's/targetSdk 34/targetSdk 35/g' || true
+          grep -rl '8.5.0' android/ | xargs sed -i 's/8.5.0/8.7.2/g' || true
+          sed -i 's/agp = "8.5.0"/agp = "8.7.2"/' node_modules/@react-native/gradle-plugin/gradle/libs.versions.toml || true
 
       - name: App icon'larni joylashtirish
         run: |
