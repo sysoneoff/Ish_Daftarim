@@ -11,53 +11,52 @@ jobs:
     steps:
       - name: Repo'ni checkout qilish
         uses: actions/checkout@v4
-      
+
       - name: Node.js o'rnatish
         uses: actions/setup-node@v4
         with:
-          node-version: '22' # Node 20 eskirgani uchun 22 qildik
+          node-version: '22'
           cache: 'npm'
-      
+
       - name: JDK 17 o'rnatish
         uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
           java-version: '17'
-      
+
       - name: NPM bog'liqliklarni o'rnatish
         run: npm install
-        
-      # SHU QATOR QO'SHILDI: Yig'ishdan oldin muammoli kutubxonani yangilaymiz
-      - name: Gesture Handler'ni yangilash
-        run: npm install react-native-gesture-handler@latest
-        
+
+      - name: Muammoli UI kutubxonalarni yangilash
+        run: |
+          npm install react-native-gesture-handler@latest react-native-screens@latest react-native-safe-area-context@latest react-native-reanimated@latest --legacy-peer-deps
+
       - name: AGP versiyasini tuzatish
         run: |
           sed -i 's/agp = "8.5.0"/agp = "8.7.2"/' node_modules/@react-native/gradle-plugin/gradle/libs.versions.toml
-      
+
       - name: App icon'larni joylashtirish
         run: |
           cp -r app-icon/android-mipmaps/* android/app/src/main/res/ 2>/dev/null || true
-      
+
       - name: Gradle wrapper'ga ruxsat berish
         run: chmod +x android/gradlew
-      
-      # Xatolikni aniq ko'rsatishi uchun --stacktrace qo'shildi
+
       - name: Debug APK yig'ish
         working-directory: android
         run: ./gradlew assembleDebug --no-daemon --stacktrace
-      
+
       - name: Release APK yig'ish (faqat main branch)
         if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
         working-directory: android
-        run: ./gradlew assembleRelease --no-daemon
-      
+        run: ./gradlew assembleRelease --no-daemon --stacktrace
+
       - name: Debug APK'ni yuklash
         uses: actions/upload-artifact@v4
         with:
           name: ish-daftarim-debug-apk
           path: android/app/build/outputs/apk/debug/app-debug.apk
-      
+
       - name: Release APK'ni yuklash
         if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
         uses: actions/upload-artifact@v4
